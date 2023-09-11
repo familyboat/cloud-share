@@ -12,6 +12,13 @@ export default function Cloud() {
     async function fetchNotes() {
       const resp = await fetch("https://meditation-backend.deno.dev/notes");
       const notes = await resp.json();
+      notes.sort((a, b) => {
+        const aCreatedaAt = (new Date(a.created_at || 0)).getTime();
+        const bCreatedaAt = (new Date(b.created_at || 0)).getTime();
+        if (aCreatedaAt > bCreatedaAt) return -1;
+        if (aCreatedaAt == bCreatedaAt) return 0;
+        if (aCreatedaAt < bCreatedaAt) return 1;
+      })
       setNotes(notes);
     }
 

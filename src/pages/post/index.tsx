@@ -14,6 +14,7 @@ export default function Post() {
       const note = {
         title,
         content,
+        'created_at': new Date()
       }
       const resp = await fetch('https://meditation-backend.deno.dev/notes', {
         method: 'POST',
