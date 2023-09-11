@@ -2,19 +2,24 @@
 import { Box, Button, TextField } from "@mui/material";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { getUserInfo, saveUserInfo } from "../../db";
 
 export default function Post() {
+  const {username} = getUserInfo();
 
   const [title, setTitle] = useState<string | null>(null);
   const [content, setContent] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null)
 
   const handleSubmit = async () => {
+    const {uid, username} = getUserInfo();
     if (title && content) {
       const note = {
         title,
         content,
-        'created_at': new Date()
+        'created_at': new Date(),
+        uid,
+        username,
       }
       const resp = await fetch('https://meditation-backend.deno.dev/notes', {
         method: 'POST',
@@ -24,7 +29,8 @@ export default function Post() {
         }
       })
       if (resp.ok) {
-        const {error, message} = await resp.json()
+        const {error, message, uid, username} = await resp.json()
+        saveUserInfo({uid, username})
         setMessage(message || error)
         setTitle(null)
         setContent(null)
@@ -47,6 +53,21 @@ export default function Post() {
         <Button onClick={handleSubmit} variant="contained" size="small">
           post
         </Button>
+        {
+          username === '' ? (
+            <></>
+          ) : (
+            <>
+              <Box
+                sx={{
+                  marginInlineStart: 'auto'
+                }}
+              >
+                Hello {username}
+              </Box>
+            </>
+          )
+        }
       </Box>
       <Box>
         {message}

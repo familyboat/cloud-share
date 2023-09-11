@@ -16,7 +16,7 @@ export default function Layout() {
   return (
     <Box
       sx={{
-        height: '100vh',
+        height: 'calc(100vh - 1rem)',
         display: 'flex',
         flexDirection: 'column',
       }}
